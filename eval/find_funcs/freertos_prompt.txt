@@ -1,0 +1,31 @@
+Your task is to find functions that are highly likely to receive user inputs. Functions may have arguments of three types: arguments that passes function context, arguments with user data, and arguments with user data length - length of user data provided as the argument. You need to make them into a list of a following format:
+
+```
+file_path, func_name, input_arg_idx, input_len_arg_idx, test_func_idx
+file_path: file path
+func_name: target function name
+input_arg_idx: argument index of input, starts from 0
+    you may need to exclude global variables from being counted as they can be optimized out
+input_len_arg_idx: argument index of input length
+    if there is no such an argument, enter -1
+test_func_idx: test function index for your harness
+    e.g., 0 --> testRawData, 1 --> testCustomData1
+    For test function list, refer to test_selector.py in each project directory
+```
+
+The examples of such functions are the following:
+
+```
+HTTPClient_SendHttpData, 2, 3, 0
+HTTPClient_Send, 2, 3, 0
+MQTTAgentCommand_Subscribe, 2, 3, 0
+MQTTAgentCommand_Publish, 2, 3, 0
+MQTTAgentCommand_Connect, 2, 3, 0
+receiveSntpResponse, 2, 3, 0
+Sntp_DeserializeResponse, 2, 3, 0
+Sntp_SerializeRequest, 2, 3, 0
+```
+
+You need to avoid functions that gets user inputs with specific structures. Instead, functions should receive user input in a raw format.
+In the given function definitions (below), output a list. You should only output a list without any other words.
+

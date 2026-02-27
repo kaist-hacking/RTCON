@@ -1,0 +1,20 @@
+Fuzzgen fuzzer list 
+--------------------------------------------------
+CMakeFiles_core_mqtt_state_utest-test_MQTT_AckToResend
+CMakeFiles_core_mqtt_state_utest-test_MQTT_CalculateStateAck
+CMakeFiles_core_mqtt_state_utest-test_MQTT_CalculateStatePublish
+CMakeFiles_core_mqtt_state_utest-test_MQTT_PublishToResend
+CMakeFiles_core_mqtt_state_utest-test_MQTT_ReserveState_compactRecords
+CMakeFiles_core_mqtt_state_utest-test_MQTT_ReserveState
+CMakeFiles_core_mqtt_state_utest-test_MQTT_State_strerror
+CMakeFiles_core_mqtt_state_utest-test_MQTT_UpdateStateAck
+CMakeFiles_mqtt_agent_command_functions_real-MQTTAgentCommand_Connect
+CMakeFiles_mqtt_agent_command_functions_real-MQTTAgentCommand_Publish
+CMakeFiles_mqtt_agent_command_functions_real-MQTTAgentCommand_Subscribe
+CMakeFiles_mqtt_agent_command_functions_real-MQTTAgentCommand_Unsubscribe
+CMakeFiles_mqtt_agent_command_functions_real-MQTTAgent_Init
+CMakeFiles_mqtt_agent_real-MQTTAgentCommand_Connect
+CMakeFiles_mqtt_agent_real-MQTTAgentCommand_Publish
+CMakeFiles_mqtt_agent_real-MQTTAgentCommand_Subscribe
+CMakeFiles_mqtt_agent_real-MQTTAgentCommand_Unsubscribe
+CMakeFiles_mqtt_agent_real-MQTTAgent_Init

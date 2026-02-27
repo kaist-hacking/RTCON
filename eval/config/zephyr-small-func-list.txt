@@ -1,0 +1,91 @@
+file_path, func_name, input_arg_idx, input_len_arg_idx, test_func_idx
+file_path: file path
+func_name: target function name
+input_arg_idx: argument index of input, starts from 0
+    you may need to exclude global variables from being counted as they can be optimized out
+input_len_arg_idx: argument index of input length
+    if there is no such an argument, enter -1
+test_func_idx: test function index for your harness
+    e.g., 0 --> testRawData, 1 --> testCustomData1
+    For test function list, refer to test_selector.py in each project directory
+
+--------------------------------------------------
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_broadcast_assistant.c,broadcast_assistant_bap_ntf_read_func,3,4,0
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_broadcast_assistant.c,notify_handler,2,3,0
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_broadcast_assistant.c,parse_and_send_recv_state,2,3,0
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_broadcast_assistant.c,parse_recv_state,0,1,0
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_broadcast_assistant.c,read_recv_state_cb,3,4,0
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_broadcast_sink.c,broadcast_sink_iso_recv,2,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/audio/bap_unicast_client.c,unicast_client_ep_iso_recv,2,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/adv.c,bt_hci_le_adv_set_terminated,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/adv.c,bt_hci_le_per_adv_response_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/adv.c,bt_hci_le_per_adv_subevent_data_request,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/adv.c,bt_hci_le_scan_req_received,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/conn.c,bt_acl_recv,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/conn.c,bt_conn_recv,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/conn.c,bt_hci_le_df_connection_iq_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/conn.c,bt_hci_le_df_connection_iq_report_common,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/conn.c,bt_hci_le_df_cte_req_failed,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/direction.c,hci_df_prepare_conn_cte_req_failed,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/direction.c,hci_df_prepare_connection_iq_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/direction.c,hci_df_prepare_connectionless_iq_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/ecc.c,bt_hci_evt_le_dhkey_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/ecc.c,bt_hci_evt_le_pkey_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,bt_hci_host_num_completed_packets,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,bt_hci_le_transmit_power_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,handle_event,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,handle_event_common,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_acl,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_data_buf_overflow,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_disconn_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_disconn_complete_prio,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_encrypt_change,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_encrypt_key_refresh_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_event,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_event_prio,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_hardware_error,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_le_meta_event,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_num_completed_packets,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,hci_vendor_event,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_conn_param_req,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_conn_update_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_data_len_change,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_enh_conn_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_enh_conn_complete_v2,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_legacy_conn_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_ltk_request,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_phy_update_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/hci_core.c,le_remote_feat_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,bt_iso_recv,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_iso,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_le_big_complete,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_le_big_sync_established,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_le_big_sync_lost,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_le_big_terminate,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_le_cis_established,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/iso.c,hci_le_cis_req,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,bt_l2cap_recv,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,l2cap_chan_le_recv,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,l2cap_chan_le_recv_sdu,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,l2cap_chan_le_recv_seg,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,l2cap_chan_le_recv_seg_direct,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,l2cap_chan_recv,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/l2cap.c,l2cap_chan_recv_queue,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_adv_ext_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_adv_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_biginfo_adv_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_df_connectionless_iq_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_df_connectionless_iq_report_common,1,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_past_received,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_past_received_common,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_past_received_v2,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_report,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_report_common,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_report_recv,1,-1,2
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_report_v2,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_sync_established,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_sync_established_common,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_sync_established_v2,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_per_adv_sync_lost,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,bt_hci_le_scan_timeout,0,-1,1
+/source/projects/Zephyr/zephyr_latest/zephyr/subsys/bluetooth/host/scan.c,le_adv_recv,2,-1,2

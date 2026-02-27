@@ -1,0 +1,276 @@
+version: "3.7"
+services:
+  base:
+    image: cgcc-base
+    container_name: cgcc-base
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  riot:
+    image: cgcc-riot
+    depends_on:
+      - "base"
+    build:
+      context: .
+      dockerfile: projects/RIOT/Dockerfile
+      args:
+        RIOT_ROOT: /source/projects/RIOT/riot_latest
+        # Fuzzing subsystem configuration
+        LWIP_FUZZ: "false"
+        LORAWAN_FUZZ: "true"
+        NIMBLE_FUZZ: "true"
+
+  threadx:
+    image: cgcc-threadx
+    depends_on:
+      - "base"
+    build:
+      context: .
+      dockerfile: projects/ThreadX/Dockerfile
+      args:
+        THREADX_ROOT: /source/projects/ThreadX/shared/lib/threadx
+
+  freertos:
+    image: cgcc-freertos
+    depends_on:
+      - "base"
+    build:
+      context: .
+      dockerfile: projects/FreeRTOS/Dockerfile
+      args:
+        FREERTOS_ROOT: /source/projects/FreeRTOS/FreeRTOS_latest
+
+  zephyr:
+    image: cgcc-zephyr
+    depends_on:
+      - "base"
+    build:
+      context: .
+      dockerfile: projects/Zephyr/Dockerfile
+      args:
+        ZEPHYR_ROOT: /source/projects/Zephyr/zephyr_latest
+
+  ########################################
+  # FuzzGen evaluation
+  ########################################
+  eval-fuzzgen-base:
+    image: cgcc-fuzzgen-base
+    depends_on:
+      - "riot"
+      - "threadx"
+      - "freertos"
+      - "zephyr"
+    build:
+      context: eval/FuzzGen
+      dockerfile: Dockerfile
+      args:
+        FUZZGEN_ROOT: /source/eval/FuzzGen
+
+  eval-fuzzgen-threadx:
+    image: cgcc-fuzzgen-threadx
+    depends_on:
+      - "eval-fuzzgen-base"
+    build:
+      context: eval/FuzzGen/projects/ThreadX
+      dockerfile: Dockerfile
+      args:
+        THREADX_ROOT: /source/projects/ThreadX/shared/lib/threadx
+
+  eval-fuzzgen-zephyr:
+    image: cgcc-fuzzgen-zephyr
+    depends_on:
+      - "eval-fuzzgen-base"
+    build:
+      context: eval/FuzzGen/projects/Zephyr
+      dockerfile: Dockerfile
+      args:
+        ZEPHYR_ROOT: /source/projects/Zephyr/zephyr_latest
+
+  eval-fuzzgen-freertos:
+    image: cgcc-fuzzgen-freertos
+    depends_on:
+      - "eval-fuzzgen-base"
+    build:
+      context: eval/FuzzGen/projects/FreeRTOS
+      dockerfile: Dockerfile
+      args:
+        FREERTOS_ROOT: /source/projects/FreeRTOS/FreeRTOS_latest
+
+  eval-fuzzgen-riot:
+    image: cgcc-fuzzgen-riot
+    depends_on:
+      - "eval-fuzzgen-base"
+    build:
+      context: eval/FuzzGen/projects/RIOT
+      dockerfile: Dockerfile
+      args:
+        RIOT_ROOT: /source/projects/RIOT/riot_latest
+        # Fuzzing subsystem configuration
+        LWIP_FUZZ: "false"
+        LORAWAN_FUZZ: "true"
+        NIMBLE_FUZZ: "true"
+
+  ########################################
+  # Manual harness evaluation
+  ########################################
+  eval-manual-riot:
+    image: cgcc-manual-riot
+    depends_on:
+      - "riot"
+    build:
+      context: eval/Manual/projects/RIOT
+      dockerfile: Dockerfile
+      args:
+        # Fuzzing subsystem configuration
+        LWIP_FUZZ: "false"
+        LORAWAN_FUZZ: "true"
+        NIMBLE_FUZZ: "true"
+  
+  eval-manual-zephyr:
+    image: cgcc-manual-zephyr
+    depends_on:
+      - "zephyr"
+    build:
+      context: eval/Manual/projects/Zephyr
+      dockerfile: Dockerfile
+  
+  eval-manual-freertos:
+    image: cgcc-manual-freertos
+    depends_on:
+      - "freertos"
+    build:
+      context: eval/Manual/projects/FreeRTOS
+      dockerfile: Dockerfile
+
+  eval-manual-threadx:
+    image: cgcc-manual-threadx
+    depends_on:
+      - "threadx"
+    build:
+      context: eval/Manual/projects/ThreadX
+      dockerfile: Dockerfile
+
+  ########################################
+  # Ablation harness evaluation
+  ########################################
+  eval-ablation-riot:
+    image: cgcc-ablation-riot
+    depends_on:
+      - "riot"
+    build:
+      context: eval/Ablation/projects/RIOT
+      dockerfile: Dockerfile
+      args:
+        # Fuzzing subsystem configuration
+        LWIP_FUZZ: "false"
+        LORAWAN_FUZZ: "true"
+        NIMBLE_FUZZ: "true"
+  
+  eval-ablation-zephyr:
+    image: cgcc-ablation-zephyr
+    depends_on:
+      - "zephyr"
+    build:
+      context: eval/Ablation/projects/Zephyr
+      dockerfile: Dockerfile
+  
+  eval-ablation-freertos:
+    image: cgcc-ablation-freertos
+    depends_on:
+      - "freertos"
+    build:
+      context: eval/Ablation/projects/FreeRTOS
+      dockerfile: Dockerfile
+
+  eval-ablation-threadx:
+    image: cgcc-ablation-threadx
+    depends_on:
+      - "threadx"
+    build:
+      context: eval/Ablation/projects/ThreadX
+      dockerfile: Dockerfile
+
+  ########################################
+  # FuzzSlice evaluation
+  ########################################
+  eval-fuzzslice-base:
+    image: cgcc-fuzzslice-base
+    depends_on:
+      - "base"
+    build:
+      context: eval/FuzzSlice
+      dockerfile: Dockerfile
+
+  eval-fuzzslice-zephyr:
+    image: cgcc-fuzzslice-zephyr
+    depends_on:
+      - "eval-fuzzslice-base"
+    build:
+      context: eval/FuzzSlice/projects/Zephyr
+      dockerfile: Dockerfile
+
+  eval-fuzzslice-threadx:
+    image: cgcc-fuzzslice-threadx
+    depends_on:
+      - "eval-fuzzslice-base"
+    build:
+      context: eval/FuzzSlice/projects/ThreadX
+      dockerfile: Dockerfile
+
+  eval-fuzzslice-freertos:
+    image: cgcc-fuzzslice-freertos
+    depends_on:
+      - "eval-fuzzslice-base"
+    build:
+      context: eval/FuzzSlice/projects/FreeRTOS
+      dockerfile: Dockerfile
+  
+  eval-fuzzslice-riot:
+    image: cgcc-fuzzslice-riot
+    depends_on:
+      - "eval-fuzzslice-base"
+    build:
+      context: eval/FuzzSlice/projects/RIOT
+      dockerfile: Dockerfile
+      args:
+        # Fuzzing subsystem configuration
+        LWIP_FUZZ: "false"
+        LORAWAN_FUZZ: "true"
+        NIMBLE_FUZZ: "true"
+
+  # SFuzz
+  # eval-sfuzz-base:
+  #   image: cgcc-sfuzz-base
+  #   depends_on:
+  #     - "base"
+  #   build:
+  #     context: eval/SFuzz
+  #     dockerfile: Dockerfile
+
+  # # Braktooth evaluation
+  # eval-braktooth:
+  #   image: cgcc-braktooth
+  #   depends_on:
+  #     - "base"
+  #   devices:
+  #     - "/dev/ttyUSB3:/dev/ttyUSB3"
+  #   build:
+  #     context: eval/BrakTooth/
+  #     dockerfile: Dockerfile
+  
+  # eval-l2fuzz:
+  #   image: cgcc-l2fuzz
+  #   depends_on:
+  #     - "base"
+  #   build:
+  #     context: eval/L2Fuzz/
+  #     dockerfile: Dockerfile
+
+  # eval-frankenstein:
+  #   image: cgcc-frankenstein-zephyr
+  #   depends_on:
+  #     - "eval-manual-zephyr"
+  #   build:
+  #     context: eval/Frankenstein/
+  #     dockerfile: Dockerfile

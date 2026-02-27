@@ -1,0 +1,40 @@
+Reduced Config
+We exclude network layers under transport layer (Too much time to search the path)
+Instead, we should put size limitation on fuzz input
+--------------------------------------------------
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ARP.c,eARPProcessPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ARP.c,vARPGenerateRequestPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ARP.c,xCheckRequiresARPResolution,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS.c,ulDNSHandlePacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Parser.c,prepareReplyDNSMessage,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ICMP.c,ProcessICMPPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ICMP.c,prvProcessICMPEchoRequest,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP.c,prvHandleEthernetPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP.c,prvProcessEthernetPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP.c,prvProcessIPPacket,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP.c,prvProcessUDPPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IP.c,vReturnEthernetFrame,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IPv6.c,eHandleIPv6ExtensionHeaders,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IPv6.c,prvAllowIPPacketIPv6,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_IPv6_Sockets.c,xRecv_Update_IPv6,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ND.c,prvProcessICMPMessage_IPv6,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ND.c,prvReturnICMP_IPv6,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_ND.c,vNDSendNeighbourSolicitation,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_RA.c,vNDSendRouterSolicitation,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_RA.c,vReceiveNA,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_RA.c,vReceiveRA,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_Sockets.c,prvSendUDPPacket,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_IP.c,xProcessReceivedTCPPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_IP_IPv4.c,xProcessReceivedTCPPacket_IPV4,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_IP_IPv6.c,xProcessReceivedTCPPacket_IPV6,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_Reception.c,prvCheckOptions,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_Reception.c,prvCheckRxData,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_Reception.c,prvStoreRxData,2,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_State_Handling.c,prvHandleSynReceived,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_TCP_State_Handling.c,prvTCPHandleFin,1,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IP.c,xProcessReceivedUDPPacket,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IPv4.c,xProcessReceivedUDPPacket_IPv4,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IPv6.c,prvStartLookup,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_UDP_IPv6.c,xProcessReceivedUDPPacket_IPv6,0,-1,1
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Parser.c,DNS_ParseDNSReply,0,1,0
+/source/projects/FreeRTOS/FreeRTOS_latest/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS_Parser.c,DNS_TreatNBNS,0,1,0

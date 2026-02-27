@@ -1,0 +1,15 @@
+assert:
+  - _assert_failure
+  - __assert_fail
+  - abort
+
+skip: []
+
+ban: []
+
+entry:
+  name: test
+  input_index: 1
+  length_index: -1
+
+taint: []

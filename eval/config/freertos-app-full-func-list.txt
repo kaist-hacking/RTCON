@@ -1,0 +1,33 @@
+file_path, func_name, input_arg_idx, input_len_arg_idx, test_func_idx
+file_path: file path
+func_name: target function name
+input_arg_idx: argument index of input, starts from 0
+    you may need to exclude global variables from being counted as they can be optimized out
+input_len_arg_idx: argument index of input length
+    if there is no such an argument, enter -1
+test_func_idx: test function index for your harness
+    e.g., 0 --> testRawData, 1 --> testCustomData1
+    For test function list, refer to test_selector.py in each project directory
+
+--------------------------------------------------
+
+Source/Application-Protocols/coreSNTP/source/core_sntp_client.c,sendSntpPacket,4,5,0
+Source/Application-Protocols/coreSNTP/source/core_sntp_client.c,receiveSntpResponse,3,4,0
+Source/Application-Protocols/coreSNTP/source/core_sntp_serializer.c,Sntp_SerializeRequest,2,3,0
+Source/Application-Protocols/coreSNTP/source/core_sntp_serializer.c,Sntp_DeserializeResponse,2,3,0
+Source/Application-Protocols/coreSNTP/source/core_sntp_serializer.c,parseValidSntpResponse,0,-1,0
+Source/Application-Protocols/coreMQTT/source/core_mqtt_serializer.c,MQTT_DeserializePublish,0,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt_serializer.c,MQTT_DeserializeAck,0,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt_serializer.c,MQTT_ProcessIncomingPacketTypeAndLength,2,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt.c,discardStoredPacket,1,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt.c,handleIncomingPublish,1,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt.c,handlePublishAcks,1,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt.c,handleIncomingAck,1,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt.c,receiveConnack,3,-1,1
+Source/Application-Protocols/coreMQTT/source/core_mqtt.c,MQTT_GetSubAckStatusCodes,0,-1,1
+Source/Application-Protocols/coreMQTT-Agent/source/core_mqtt_agent_command_functions.c,MQTTAgentCommand_Publish,1,-1,0
+Source/Application-Protocols/coreMQTT-Agent/source/core_mqtt_agent_command_functions.c,MQTTAgentCommand_Subscribe,1,-1,0
+Source/Application-Protocols/coreMQTT-Agent/source/core_mqtt_agent_command_functions.c,MQTTAgentCommand_Unsubscribe,1,-1,0
+Source/Application-Protocols/coreMQTT-Agent/source/core_mqtt_agent_command_functions.c,MQTTAgentCommand_Connect,1,-1,0
+Source/Application-Protocols/coreMQTT-Agent/source/core_mqtt_agent_command_functions.c,MQTTAgentCommand_Disconnect,1,-1,0
+Source/Application-Protocols/coreMQTT-Agent/source/core_mqtt_agent_command_functions.c,MQTTAgentCommand_Ping,1,-1,0

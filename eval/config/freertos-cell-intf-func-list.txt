@@ -1,0 +1,14 @@
+file_path, func_name, input_arg_idx, input_len_arg_idx, test_func_idx
+file_path: file path
+func_name: target function name
+input_arg_idx: argument index of input, starts from 0
+    you may need to exclude global variables from being counted as they can be optimized out
+input_len_arg_idx: argument index of input length
+    if there is no such an argument, enter -1
+test_func_idx: test function index for your harness
+    e.g., 0 --> testRawData, 1 --> testCustomData1
+    For test function list, refer to test_selector.py in each project directory
+
+--------------------------------------------------
+
+_Cellular_RecvFuncGetSimLockStatus, 2, 3, 0

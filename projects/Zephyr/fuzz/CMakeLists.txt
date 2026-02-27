@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: Apache-2.0
+
+cmake_minimum_required(VERSION 3.20.0)
+find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
+project(Fuzzer)
+
+if(DEFINED NATIVE)
+    target_sources(app PRIVATE src/main_native.c)
+endif()
+if(DEFINED FUZZ)
+    target_sources(app PRIVATE src/main.c)
+    target_sources(app PRIVATE src/crash.c)
+    target_sources(app PRIVATE src/fuzz.c)
+    target_sources(app PRIVATE src/hashmap.c)
+    target_sources(app PRIVATE src/hook.c)
+endif()
+
+zephyr_compile_options( -O0 -fno-inline -fno-builtin -g )
+if(DEFINED ENV{CRASH_DIR_PATH})
+    zephyr_compile_options( -DCRASH_DIR_PATH="$ENV{CRASH_DIR_PATH}" )
+endif()
+if(DEFINED ENV{LOW_FUZZ})
+    zephyr_compile_options( -DLOW_FUZZ=1 )
+endif()
+
+if(DEFINED FUZZ)
+    zephyr_compile_options( -fpass-plugin=/source/build/libcgcc.so )
+    zephyr_compile_options( -fno-omit-frame-pointer -fsanitize-recover=address )
+#    zephyr_compile_options( -DFUZZ_COVERAGE -fprofile-instr-generate -fcoverage-mapping )
+    zephyr_compile_options( -DCOVERAGE_DIR_PATH="$ENV{COVERAGE_DIR_PATH}" )
+    zephyr_compile_options( -DTEST_IDX=$ENV{TEST_IDX} )
+    target_link_options(zephyr_interface INTERFACE -rdynamic -fprofile-instr-generate -fcoverage-mapping )
+endif()

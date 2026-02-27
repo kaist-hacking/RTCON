@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# This file is brought from SymCC.
+
+pass="${CGCC_PASS_DIR:-@CMAKE_CURRENT_BINARY_DIR@}/libcgcc.so"
+compiler="${CGCC_CLANG:-@CLANG_BINARY@}"
+
+exec "$compiler"                                \
+     -fsanitize=address                         \
+     -fno-omit-frame-pointer                    \
+     -g -O0 -fno-inline                         \
+     -fprofile-instr-generate                   \
+     -fcoverage-mapping                         \
+     -fsanitize-recover=address                 \
+     @CLANG_LOAD_PASS@"$pass"                   \
+     "$@"

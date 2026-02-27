@@ -1,0 +1,7 @@
+Fuzzgen fuzzer list 
+--------------------------------------------------
+nimble_autoconn_ccnl-ble_ll_reset
+nimble_autoconn_ccnl-ble_ll_rx_end
+nimble_autoconn_ccnl-nimble_autoconn_disable
+nimble_autoconn_ccnl-nimble_autoconn_enable
+nimble_autoconn_ccnl-nimble_autoconn_init
