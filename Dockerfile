@@ -55,6 +55,6 @@ COPY eval/scripts/view_eval.py /scripts/
 COPY eval/config /configs
 
 COPY eval/scripts/view_coverage.py /scripts/
-COPY eval/native_binaries /native_binaries
+# COPY eval/native_binaries /native_binaries
 
 ENV PATH=/source/build:$PATH
