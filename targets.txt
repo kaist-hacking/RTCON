@@ -1,0 +1,39 @@
+--------------------------------------------------
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/legacy/ares_parse_a_reply.c,ares_parse_a_reply,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/legacy/ares_parse_ns_reply.c,ares_parse_ns_reply,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/legacy/ares_parse_ptr_reply.c,ares_parse_ptr_reply,0 1 2 3,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/legacy/ares_parse_txt_reply.c,ares_parse_txt_reply,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/legacy/ares_parse_txt_reply.c,ares_parse_txt_reply_ext,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/legacy/ares_parse_uri_reply.c,ares_parse_uri_reply,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/ares_strerror.c,ares_strerror,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/inet_ntop.c,ares_inet_ntop,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/ares_socket.c,ares_set_socket_callback,2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/ares_socket.c,ares_set_socket_configure_callback,2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/ares_socket.c,ares_set_pending_write_cb,2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/ares_init.c,ares_set_query_enqueue_cb,2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_name,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_class,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_mapping.c,ares_dns_class_tostr,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_mapping.c,ares_dns_rec_type_tostr,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/include/ares.h,ares_query,1 2 3,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/include/ares.h,ares_set_servers_csv,1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/include/ares.h,ares_queue_wait_empty,1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/include/ares.h,ares_set_socket_functions_ex,1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_u8,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_u16,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_u32,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_str,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_record_rr_add,1 2 3 4 5 6,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_set_str,0 1 2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_add_abin,0 1 2 3,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_set_u16,0 1 2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/ares_init.c,ares_init_options,2,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_parse.c,ares_dns_parse,0 1,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_record_query_cnt,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_record_query_get,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_record_rr_cnt,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_record_rr_get,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_get_type,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_mapping.c,ares_dns_rr_get_keys,0,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_add_abin,3,-1,-1
+/home/eunkyu/research/apilot/PromeFuzzDatabase/c-ares/latest/code/src/lib/record/ares_dns_record.c,ares_dns_rr_set_bin,3,-1,-1

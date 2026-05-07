@@ -1,0 +1,385 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Tool / library paths (can be overridden by env vars)
+# ---------------------------------------------------------------------------
+pass="${CGCC_PASS_DIR:-/source/build}/libcgcc.so"
+skel_lib="${CGCC_SKEL_LIB_DIR:-/source/build}/libskel.a"
+compiler="${CGCC_CLANG:-/usr/bin/clang-18}"
+ar="${CGCC_AR:-/usr/bin/llvm-ar-18}"
+llc="${CGCC_LLC:-/usr/bin/llc-18}"
+opt_bin="${CGCC_OPT:-/usr/bin/opt-18}"
+llvm_link="${CGCC_LLVM_LINK:-/usr/bin/llvm-link-18}"
+ld="${CGCC_LD:-/usr/bin/ld}"
+harness_lib="${HARNESS_LIB:-}"
+
+# ---------------------------------------------------------------------------
+# Common flags (you can tweak these)
+# ---------------------------------------------------------------------------
+# compile_flags=(
+#   -fsanitize=address,fuzzer
+#   -fno-omit-frame-pointer
+#   -fsanitize-recover=address
+#   -Wno-unused-command-line-argument
+# )
+compile_flags=(
+  -fno-omit-frame-pointer
+  -Wno-unused-command-line-argument
+)
+san_flags=(
+  -fsanitize=address,fuzzer
+  -fsanitize-recover=address
+)
+opt_flags=(
+  -g -O0 -fno-inline
+)
+
+
+# ---------------------------------------------------------------------------
+# Catch CMake test compilations and pass-through
+# ---------------------------------------------------------------------------
+joined="$*"
+CLANG="${CGCC_REAL_CLANG:-/usr/bin/clang-18}"
+if [[ "$PWD" == *"CMakeScratch"* ]] || \
+   [[ "$joined" == *"testCCompiler.c"* ]] || \
+   [[ "$joined" == *"CMakeTestCCompiler.cmake"* ]] || \
+   [[ "$joined" == *"conftest.c"* ]] || \
+   [[ "$joined" == *"CMakeTestCXXCompiler.cmake"* ]] || \
+   [[ "$joined" == *"cmTC_"* ]]; then
+  exec "$CLANG" "$@"
+fi
+
+if [[ "$*" == *"conftest"* ]]; then
+  exec "$ar" "$@"
+fi
+
+# ---------------------------------------------------------------------------
+# First pass: detect -c and capture original args
+# ---------------------------------------------------------------------------
+
+echo "[cgcc] Invoked with arguments: $*" >&2
+
+orig_args=("$@")
+compile_only=0
+out=""
+srcs=()
+objs=()
+other_link_inputs=()
+common_flags=()
+include_dirs=()
+
+
+if [[ "$1" =~ ^[crqstuvx]+$ ]]; then
+  # AR options
+  opts="$1"
+  shift
+  out="$1"
+  shift
+fi
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -c)
+      compile_only=1
+      common_flags+=("$1")
+      ;;
+    -o)
+      shift
+      out="$1"
+      common_flags+=("-o" "$1")
+      ;;
+    *.c|*.cpp|*.cc|*.cxx|*.C)
+      srcs+=("$1")
+      ;;
+    *.o)
+      objs+=("$1")
+      ;;
+    *.a|-l*|-L*)
+      other_link_inputs+=("$1")
+      ;;
+    -I*)
+      include_dirs+=("$1")
+      common_flags+=("$1")
+      ;;
+    *)
+      common_flags+=("$1")
+      ;;
+  esac
+  shift
+done
+
+# ---------------------------------------------------------------------------
+# CXX compiler
+# ---------------------------------------------------------------------------
+for src in "${srcs[@]}"; do
+  case "$src" in
+    *.cpp*|*.cc*|*.cxx*|*.C)
+      compiler="/usr/bin/clang++-18"
+      break
+      ;;
+  esac
+done
+
+# ---------------------------------------------------------------------------
+# Case 1: compile-only mode (cgcc -c ...)
+# ---------------------------------------------------------------------------
+if [[ $compile_only -eq 1 ]]; then
+  # 1) Let clang do normal compilation with the original arguments
+  "$compiler" "${compile_flags[@]}" "${opt_flags[@]}" "${orig_args[@]}"
+
+  # 2) Additionally, for each C source, emit a .bc next to its .o
+  #    Heuristic for .bc name:
+  #      - If there is a single source and an explicit -o <foo.o>, use <foo>.bc
+  #      - Otherwise, use <src_basename>.bc
+  if [[ ${#srcs[@]} -eq 1 && -n "$out" ]]; then
+    # Single source + explicit -o
+    src="${srcs[0]}"
+    if [[ "$out" == *.o ]]; then
+      bc_out="${out%.o}.bc"
+    else
+      bc_out="${out}.bc"
+    fi
+    "$compiler" -emit-llvm -c \
+        "${compile_flags[@]}" "${opt_flags[@]}" "${common_flags[@]}" \
+        "$src" -o "$bc_out"
+  else
+    # Multiple sources or no -o: produce one .bc per source
+    for src in "${srcs[@]}"; do
+      base="$(basename "$src" .c)"
+      bc_out="${base}.bc"
+      "$compiler" -emit-llvm -c \
+          "${compile_flags[@]}" "${opt_flags[@]}" "${common_flags[@]}" \
+          "$src" -o "$bc_out"
+    done
+  fi
+
+  exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Case 2: static linking with archives
+# We want:
+#   - Find all .o inputs
+#   - For each .o, if matching .bc exists (same basename), collect it
+#   - llvm-link all collected .bc -> merged.bc
+#   - run opt with our plugin on merged.bc -> merged_opt.bc
+#   - compile merged_opt.bc + remaining objects/libs into final binary
+# ---------------------------------------------------------------------------
+
+# Check the current running program is ar
+if [[ "$(basename "$0")" == "ar" ]]; then
+  # Collect all objects: from parsed objs plus any .o that slipped via common_flags
+  # (just in case)
+  for arg in "${common_flags[@]}"; do
+    if [[ "$arg" == *.o ]]; then
+      objs+=("$arg")
+    fi
+  done
+
+  # Build the list of .bc files corresponding to .o files
+  bc_list=()
+  objs_without_bc=()
+
+  for obj in "${objs[@]}"; do
+    base="${obj%.o}"
+    candidate_bc="${base}.bc"
+    if [[ -f "$candidate_bc" ]]; then
+      bc_list+=("$candidate_bc")
+    else
+      objs_without_bc+=("$obj")
+    fi
+  done
+
+  # If there are no .bc files at all, just behave like a normal clang link
+  if [[ ${#bc_list[@]} -eq 0 ]]; then
+    exec "$ar" "$opts" "$out" 
+  fi
+
+  # There ARE .bc files → run link + opt
+  tmp_prefix=".cgcc_link.$$"
+  linked_bc="${tmp_prefix}_linked.bc"
+  opt_bc="${tmp_prefix}_opt.bc"
+
+  echo "[cgcc] Linking bitcode modules, $linked_bc:" >&2
+  printf '  %s\n' "${bc_list[@]}"
+
+  "$llvm_link" "${bc_list[@]}" -o "$linked_bc"
+
+  echo "[cgcc] Running opt with plugin: $pass, $opt_bc" >&2
+  "$opt_bin" -load-pass-plugin="$pass" \
+            -passes="default<O0>" \
+            "$linked_bc" -o "$opt_bc"
+
+  "$compiler" \
+    -fno-function-sections -fno-data-sections \
+    "${compile_flags[@]}" "${opt_flags[@]}" \
+    -c "$opt_bc" -o "${opt_bc}.o"
+
+  # Build final archive with optimized bitcode and remaining objects
+  echo "[cgcc] Building final archive: $out" >&2
+  "$ar" rcs "$out" "${opt_bc}.o"
+
+  exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Case 3: link mode (no -c)
+# We want:
+#   - Find all .o inputs
+#   - For each .o, if matching .bc exists (same basename), collect it
+#   - llvm-link all collected .bc -> merged.bc
+#   - run opt with our plugin on merged.bc -> merged_opt.bc
+#   - compile merged_opt.bc + remaining objects/libs into final binary
+# ---------------------------------------------------------------------------
+
+# If user didn’t provide -o, default to a.out
+if [[ -z "$out" ]]; then
+  out="a.out"
+fi
+
+# Collect all objects: from parsed objs plus any .o that slipped via common_flags
+# (just in case)
+for arg in "${common_flags[@]}"; do
+  if [[ "$arg" == *.o ]]; then
+    objs+=("$arg")
+
+    # Remove from common_flags to avoid passing twice
+    new_common_flags=()
+    for cf in "${common_flags[@]}"; do
+      if [[ "$cf" != "$arg" ]]; then
+        new_common_flags+=("$cf")
+      fi
+    done
+    common_flags=("${new_common_flags[@]}")
+  fi
+done
+
+# Build the list of .bc files corresponding to .o files
+bc_list=()
+objs_without_bc=()
+
+for obj in "${objs[@]}"; do
+  base="${obj%.o}"
+  candidate_bc="${base}.bc"
+  if [[ -f "$candidate_bc" ]]; then
+    bc_list+=("$candidate_bc")
+  else
+    objs_without_bc+=("$obj")
+  fi
+done
+
+if [[ ${#objs[@]} -eq 0 ]]; then
+  for src in "${srcs[@]}"; do
+    echo "[cgcc] Compiling source file directly: $src" >&2
+    bc_file="${src%.*}.bc"
+    echo "[cgcc] Generating bitcode for source: $bc_file" >&2
+    "$compiler" -emit-llvm -c \
+      "${compile_flags[@]}" "${opt_flags[@]}" \
+      "$src" -o "$bc_file"
+    bc_list+=("$bc_file")
+  done
+fi
+
+# If there are no .bc files at all, just behave like a normal clang link
+# if [[ ${#bc_list[@]} -eq 0 ]]; then
+#   exec "$compiler" \
+#     "${compile_flags[@]}" "${opt_flags[@]}" \
+#     "${objs[@]}" "${other_link_inputs[@]}" \
+#     -Wl,--whole-archive "$skel_lib" -Wl,--no-whole-archive \
+#     -o "$out"
+# fi
+
+# There ARE .bc files → run link + opt
+tmp_prefix=".cgcc_link.$$"
+linked_bc="${tmp_prefix}_linked.bc"
+opt_bc="${tmp_prefix}_opt.bc"
+
+echo "[cgcc] Linking bitcode modules, $linked_bc:" >&2
+printf '  %s\n' "${bc_list[@]}"
+
+"$llvm_link" "${bc_list[@]}" -o "$linked_bc"
+
+echo "[cgcc] Running opt with plugin: $pass, $opt_bc" >&2
+"$opt_bin" -load-pass-plugin="$pass" \
+           -passes="default<O0>" \
+           "$linked_bc" -o "$opt_bc"
+
+echo "[cgcc] Building final binary: $out" >&2
+
+if [[ -n "$harness_lib" ]]; then
+  echo "[cgcc] Using harness lib: $harness_lib" >&2
+fi
+
+# Important:
+#   - Do NOT pass the original .o files that have corresponding .bc,
+#     to avoid multiple definitions.
+#   - Only pass:
+#       * optimized merged bitcode
+#       * objects without .bc
+#       * other link inputs (libs, etc.)
+# Echo compile command
+
+# If the output is a shared library, also build an executable binary
+if [[ "$out" == *.so ]]; then
+  exe_out="${out%.so}"
+  echo "[cgcc] Output is a shared library; also building executable: $exe_out" >&2
+
+  # Filter out -shared and -o <file> from common_flags for the executable build
+  exe_common_flags=()
+  skip_next=0
+  for flag in "${common_flags[@]}"; do
+    if [[ $skip_next -eq 1 ]]; then
+      skip_next=0
+      continue
+    fi
+    if [[ "$flag" == "-shared" ]]; then
+      continue
+    fi
+    if [[ "$flag" == "-o" ]]; then
+      skip_next=1
+      continue
+    fi
+    exe_common_flags+=("$flag")
+  done
+
+  harness_link_flags=()
+  if [[ -n "$harness_lib" ]]; then
+    harness_link_flags+=(-Wl,--no-as-needed "$harness_lib" -Wl,--as-needed)
+  fi
+
+  "$compiler" \
+    "${compile_flags[@]}" "${san_flags[@]}" "${opt_flags[@]}" \
+    "$opt_bc" \
+    "${objs_without_bc[@]}" \
+    "${other_link_inputs[@]}" \
+    -Wl,--no-gc-sections \
+    -Wl,--whole-archive "$skel_lib" -Wl,--no-whole-archive \
+    "${harness_link_flags[@]}" \
+    -o "$exe_out" "${exe_common_flags[@]}"
+
+  cp "$exe_out" /tmp/gen_harness
+else
+	echo "[cgcc] Compile command: $compiler ... -o $out" >&2
+
+	harness_link_flags=()
+	if [[ -n "$harness_lib" ]]; then
+	  harness_link_flags+=(-Wl,--no-as-needed "$harness_lib" -Wl,--as-needed)
+	fi
+
+	"$compiler" \
+	  "${compile_flags[@]}" "${san_flags[@]}" "${opt_flags[@]}" \
+	  "$opt_bc" \
+	  "${objs_without_bc[@]}" \
+	  "${other_link_inputs[@]}" \
+	  -Wl,--no-gc-sections \
+	  -Wl,--whole-archive "$skel_lib" -Wl,--no-whole-archive \
+	  "${harness_link_flags[@]}" \
+	  -o "$out" "${common_flags[@]}"
+
+  cp "$out" /tmp/gen_harness
+fi
+
+echo "[cgcc] Done. Output: $out" >&2
+
+# Optional cleanup
+rm -f "$linked_bc" "$opt_bc"

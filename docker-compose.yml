@@ -1,0 +1,14 @@
+services:
+  rtcon:
+    image: rtcon
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    restart: "no"
+    volumes:
+      # All project sources live under ./project. The active project is chosen
+      # by `active_project` in config.yml — compose stays project-agnostic.
+      - ./project:/projects
+      - ./config.yml:/source/config.yml:ro

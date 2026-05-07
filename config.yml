@@ -1,0 +1,65 @@
+# =============================================================================
+# RTCon configuration
+#
+# To switch projects, change `active_project` below
+# and re-run `docker compose run --rm rtcon`. No need to edit docker-compose.yml.
+# =============================================================================
+
+# ---- Active project ---------------------------------------------------------
+# Value must match a key under `projects:` below.
+# Set to `none` (or leave blank) to pick a subdirectory of ./project/ via fzf
+# at runtime — useful when you have a one-off project not listed below.
+active_project: none
+
+# ---- Container-side paths ---------------------------------------------------
+general:
+  projects_root: /projects                  # mount point of ./project (host)
+  cgcc_path:     /source/build/cgcc
+  bc_file_path:  whole_project.bc           # generated under /source
+  ll_file_path:  whole_project.ll           # generated under /source
+
+# ---- Target function selection ----------------------------------------------
+target:
+  # true  -> read targets from `target_func_file` inside the project subdir
+  # false -> pick interactively via fzf, then append to that file
+  use_predefined_targets: true
+  target_func_file: targets.txt             # relative to the project subdir
+  target_func:      keymint_process         # auto-select; leave blank to prompt
+
+# ---- Per-project build recipes ----------------------------------------------
+# Each recipe describes how to build the target inside the container.
+#   subdir         host directory under ./project (also under /projects)
+#   build_command  shell command run from the project subdir
+#   build_dir      directory (relative to subdir) to cd into for the harness build
+#   binary_name    artifact to extract bitcode from
+projects:
+
+  keymint_build:
+    subdir:        Keymint_build
+    build_command: "make clean && make"
+    build_dir:     build
+    binary_name:   libkeymint.so
+
+  libhevc:
+    subdir:        libhevc
+    build_command: "rm -rf build && mkdir build && cd build && cmake .. && make"
+    build_dir:     build
+    binary_name:   hevcenc
+
+  pugixml:
+    subdir:        pugixml
+    build_command: "rm -rf build && mkdir build && cd build && cmake .. && make"
+    build_dir:     build
+    binary_name:   libpugixml.a
+
+  c-ares:
+    subdir:        c-ares
+    build_command: "rm -rf build && mkdir build && cd build && cmake .. && make"
+    build_dir:     build
+    binary_name:   libcares.so
+
+  ffjpeg:
+    subdir:        ffjpeg
+    build_command: "make clean && make"
+    build_dir:     build
+    binary_name:   libffjpeg.a
