@@ -4,6 +4,12 @@
 
 `RTCon` is a tool that performs function-level fuzzing on RTOSes.
 
+## ⚠️ To use `RTCon` for testing general libraries, switch to the `general` branch.
+```
+git fetch origin
+git checkout -b general
+```
+
 Currently, it supports 4 RTOSes:
 
 - `Zephyr`
