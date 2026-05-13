@@ -237,6 +237,20 @@ if [[ -z "$out" ]]; then
   out="a.out"
 fi
 
+# ---------------------------------------------------------------------------
+# Target-binary gate
+#
+# When TARGET_BINARY is set, only the final link that produces it should go
+# through the harness path (opt pass + sanitizers + skel/harness lib +
+# /tmp/gen_harness). Every other link in the same build (e.g., sibling
+# executables, unrelated shared libs) falls through to a plain clang link so
+# they don't get instrumented with harness symbols they can't resolve.
+# ---------------------------------------------------------------------------
+if [[ -n "${TARGET_BINARY:-}" && "$(basename "$out")" != "$TARGET_BINARY" ]]; then
+  echo "[cgcc] $out != TARGET_BINARY ($TARGET_BINARY) — plain link" >&2
+  exec "$compiler" "${orig_args[@]}"
+fi
+
 # Collect all objects: from parsed objs plus any .o that slipped via common_flags
 # (just in case)
 for arg in "${common_flags[@]}"; do

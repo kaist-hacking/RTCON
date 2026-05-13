@@ -22,16 +22,19 @@ general:
 target:
   # true  -> read targets from `target_func_file` inside the project subdir
   # false -> pick interactively via fzf, then append to that file
-  use_predefined_targets: true
-  target_func_file: targets.txt             # relative to the project subdir
-  target_func:      keymint_process         # auto-select; leave blank to prompt
+  use_predefined_targets: false
+  target_func_file:          # relative to the project subdir
+  target_func:               # auto-select; leave blank to prompt
 
 # ---- Per-project build recipes ----------------------------------------------
 # Each recipe describes how to build the target inside the container.
 #   subdir         host directory under ./project (also under /projects)
-#   build_command  shell command run from the project subdir
+#   build_command  shell command run from the project subdir; narrow this to
+#                  build ONLY the target (e.g. `make hevcenc`, not bare `make`)
+#                  so sibling binaries don't get rebuilt with cgcc.
 #   build_dir      directory (relative to subdir) to cd into for the harness build
-#   binary_name    artifact to extract bitcode from
+#   binary_name    artifact to extract bitcode from; also used as TARGET_BINARY
+#                  to gate cgcc instrumentation to this output only.
 projects:
 
   keymint_build:
@@ -42,7 +45,7 @@ projects:
 
   libhevc:
     subdir:        libhevc
-    build_command: "rm -rf build && mkdir build && cd build && cmake .. && make"
+    build_command: "rm -rf build && mkdir build && cd build && cmake .. && make hevcenc"
     build_dir:     build
     binary_name:   hevcenc
 

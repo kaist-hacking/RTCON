@@ -45,6 +45,7 @@ load_config() {
     USE_PREDEFINED_TARGETS=$(ycfg '.target.use_predefined_targets')
     TARGET_FUNC_FILE_REL=$(ycfg '.target.target_func_file')
     TARGET_FUNC=$(ycfg '.target.target_func')
+    [[ -n "$TARGET_FUNC_FILE_REL" ]] || TARGET_FUNC_FILE_REL="targets.txt"
 
     ACTIVE_PROJECT=$(ycfg '.active_project')
     SUBDIR=""
@@ -93,6 +94,9 @@ load_config() {
     [[ -d "$PROJECT_DIR" ]] || die "Project dir not found: $PROJECT_DIR (is ./project/${SUBDIR} mounted?)"
 
     TARGET_FUNC_FILE="${PROJECT_DIR}/${TARGET_FUNC_FILE_REL}"
+
+    [[ -d "$TARGET_FUNC_FILE" ]] && \
+        die "target_func_file resolved to a directory ($TARGET_FUNC_FILE). Check target.target_func_file in $CONFIG_FILE."
 
     if [[ "$USE_PREDEFINED_TARGETS" == "true" && ! -f "$TARGET_FUNC_FILE" ]]; then
         die "use_predefined_targets=true but $TARGET_FUNC_FILE not found"
@@ -473,6 +477,7 @@ build_harness() {
     target_so=$(find /source -name "*${FUNC_NAME}*.so" | head -n 1)
     export HARNESS_LIB=$(realpath "$target_so")
     export TAINT_CONFIGURATION_FILE=$(realpath "$yaml_path")
+    export TARGET_BINARY="$BINARY_NAME"
 
     # Swap ar -> cgcc so downstream link steps go through our wrapper
     mv /usr/bin/ar /usr/bin/ar.bak && ln -s "$CGCC" /usr/bin/ar
