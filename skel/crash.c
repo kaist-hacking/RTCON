@@ -236,7 +236,9 @@ getCrashAddress(const char *report, int index) {
   pc += strlen(index_str);
 
   memset(addr, 0, 20);
-  memcpy(addr, pc, 20);
+  size_t avail = strlen(pc);
+  size_t copy_len = avail < 19 ? avail : 19;
+  memcpy(addr, pc, copy_len);
 
   char *end = strchr(addr, ' ');
   if (end != NULL) {
